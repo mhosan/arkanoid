@@ -1,54 +1,93 @@
 <title>Arkanoide en js.</title>
 <style>
-    body 
-        {
-            background-color: #111;
-        }
-    canvas
-        {
-            border: 4px solid white;
-            border-bottom: transparent;
-            background: black;
-            margin: 0 auto;
-            display: block;
-        }
+    body {
+        background-color: #111;
+    }
+
+    canvas {
+        border: 4px solid white;
+        border-bottom: transparent;
+        background: black;
+        margin: 0 auto;
+        display: block;
+    }
 </style>
 <canvas></canvas>
 <script>
     const canvas = document.querySelector('canvas')
     const ctx = canvas.getContext('2d') //recuperar el contexto en dos D.
-    canvas.width=448
-    canvas.height=400
+    canvas.width = 448
+    canvas.height = 400
 
     //variables de la pelota
     const ballRadius = 4;
-    let x = canvas.width / 2;
+    let x = canvas.width / 1.5;
     let y = canvas.height - 30;
-    //velocidad de la pelota
+
+    //velocidad de la pelota, aceleración
     let dx = 2;
     let dy = -2;
 
+    //variables de la paleta
+    const paddleHeight = 10;
+    const paddleWidth = 50;
+    let paddleX = (canvas.width - paddleWidth) / 2;
+    let paddleY = canvas.height - paddleHeight - 10;
+    let rightPressed = false;
+    let leftPressed = false;
+
     function drawBall() {
-        ctx.beginPath()
+        ctx.beginPath() //iniciar el trazado
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2)
         ctx.fillStyle = '#fff'
         ctx.fill()
-        ctx.closePath()
+        ctx.closePath() //terminar el trazado
 
     }
-    function drawPaddle() {}
-    function drawBricks() {}
-
-    function collisionDetection(){}
-    function ballMovement(){
-        x +=dx
-        y +=dy
+    function drawPaddle() {
+        ctx.fillStyle = '#08f'
+        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight)
     }
-    function paddleMovement(){}
-    function cleanCanvas(){
-        ctx.clearRect(0,0, canvas.width, canvas.height)
+    
+    function drawBricks() { }
+
+    function collisionDetection() { }
+
+    function ballMovement() {
+        //rebotar pelotas en laterales
+        if (
+            x + dx > canvas.width - ballRadius ||  //pared derecha
+            x + dx < ballRadius  //pared izquierda
+        ) {
+            dx = -dx
+        }
+        //rebotar pelotas en verticales
+        if (
+            y + dy < ballRadius
+        ) {
+            dy = -dy
+        }
+        //game over
+        if(y + dy > canvas.height - ballRadius){
+            console.log('Game over');
+            document.location.reload();
+        }
+        x += dx
+        y += dy    
+    }
+    
+    function paddleMovement() { }
+    
+    function cleanCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
 
+    function initEvents(){
+        document.addEventListener('keydown', keyDownHandler)
+        document.addEventListener('keyup', keyUpHandler)
+    }
+
+    //funcion principal
     function draw()//loop infinito
     {
         cleanCanvas()
@@ -62,7 +101,7 @@
         collisionDetection()
         ballMovement()
         paddleMovement()
-        
+
         window.requestAnimationFrame(draw)//aprox 60 fps
     }
 
