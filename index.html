@@ -13,11 +13,18 @@
     }
 </style>
 <canvas></canvas>
+
+<img hidden id="sprite" src="./sprite.png" alt="sprite Arkanoide">
+<img hidden id="bricks" src="./bricks.png" alt="brics Arkanoide">
+
 <script>
     const canvas = document.querySelector('canvas')
     const ctx = canvas.getContext('2d') //recuperar el contexto en dos D.
-    canvas.width = 448
-    canvas.height = 400
+    canvas.width = 448;
+    canvas.height = 400;
+    const $sprite=document.querySelector("sprite");
+    const $bricks=document.querySelector("bricks");
+
 
     //variables de la pelota
     const ballRadius = 4;
@@ -48,7 +55,20 @@
     function drawPaddle() {
         ctx.fillStyle = '#08f'
         ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight)
+
+        ctx.drawImage(
+            $sprite, 
+            30, 
+            170,
+            paddleWidth,
+            paddleHeight,
+            paddleX,
+            paddleY,
+            paddleWidth,
+            paddleHeight
+            )
     }
+   
     
     function drawBricks() { }
 
