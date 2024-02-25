@@ -26,11 +26,11 @@
     const $bricks=document.querySelector("#bricks");
 
     //variables de la pelota
-    const ballRadius = 4;
+    const ballRadius = 3;
     let x = canvas.width / 1.5;
     let y = canvas.height - 30;
     //velocidad de la pelota, aceleración
-    let dx = 3;
+    let dx = 4;
     let dy = -3;
 
     //variables de la paleta
@@ -125,8 +125,8 @@
                     $bricks, 
                     clipX,    //cord x del recorte
                     0,      //cord y del recorte
-                    20,       //tamaño del recorte
-                    15,       //tamaño del recorte
+                    25,       //tamaño del recorte
+                    13,       //tamaño del recorte
                     currentBrick.x,  //posic del dibujo
                     currentBrick.y,  //posic del dibujo
                     bricksWidth,     //ancho del dib
@@ -136,7 +136,29 @@
         }
      }
 
-    function collisionDetection() { }
+    function collisionDetection() { 
+        for (let c=0; c < bricksColumnCount; c++){
+            for (let r = 0; r < bricksRowCount; r++){
+                const currentBrick = bricks[c][r];
+                if(currentBrick.status === BRICKS_STATUS.DESTROYED){
+                    continue;
+                }
+                const isBallSameXAsBrick = 
+                    x > currentBrick.x && 
+                    x < currentBrick.x + bricksWidth;
+                
+                const isBallSameYAsBrick = 
+                    y > currentBrick.y && 
+                    y < currentBrick.y + bricksHeight;
+
+                if(isBallSameXAsBrick && isBallSameYAsBrick){
+                    dy = -dy;
+                    currentBrick.status = BRICKS_STATUS.DESTROYED
+                }
+
+            }
+        }
+    }
 
     function ballMovement() {
         const isBallSameXAsPaddle = x > paddleX && x < paddleX + paddleWidth; 
